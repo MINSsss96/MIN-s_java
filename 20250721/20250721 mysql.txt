@@ -1,0 +1,184 @@
+create table employee(
+id int primary key auto_increment,
+name varchar(20),
+superior_id int
+);
+
+insert into employee(name, superior_id)
+values ('김사장', NULL),
+('정과장', 1),
+('최대리', 2),
+('이대리', 2),
+('박고문', NULL);
+
+select emp1.id, emp1.name, emp2.name as 상사
+from employee emp1
+inner join employee emp2
+on emp1.superior_id = emp2.id;
+
+song 테이블에 노래가사중 give가 포함된 걸그룹의 전체 정보 출력
+
+select  s_id from song
+where lyrics like '%Give%';
+
+select * from girl_group
+where hit_song_id = 105;
+
+노랫가사에 givee가 포함된 걸그룹 정보확인 // (1개일 때는 = 으로 써도 됨, 1개를 찾을 때는 = 으로 써야함.)
+select * from girl_group
+where hit_song_id = (
+select  s_id from song
+where lyrics like '%Give%'
+);
+
+노랫가사에 e가 포함된 걸그룹 정보확인 // (1개 이상일 때는 in으로 써야함)
+select * from girl_group
+where hit_song_id in (
+select  s_id from song
+where lyrics like '%e%'
+);
+
+그룹이름, 데뷔일, 노래 타이틀 출력
+노래 가사에 e를 포함하는 자료 중에서 찾기
+select g.name, g.debut, 
+(select title from song
+where lyrics like '%e%'
+and 
+ is not null
+and g.hit_song_id = s_id) as hitsong
+from girl_group as g;
+
+
+FROM girl_group AS gg join AS s
+on gg.hit_song_id = s.s_id
+WHERE s.lyrics lice '%e%';
+
+select title from song
+where lyrics like '%e%'
+and g.hit_song_id = s_id
+
+함수 활용
+함수 : DB 마다 사용방법이 또는 함수이름이 다를 가능성 잇다
+모든 DB마다 동일한 문법
+
+select
+update
+delete
+insert
+
+ANSI(안시) SQL
+
+select abs(-100);
+
+select 14%3;
+
+select rand();
+
+select floor(rand()*6 +1) as value;
+
+select * from song
+order by rand()
+limit 1;
+
+올림(ceiling), 버림(floor), 반올림(round), truncate(소수점 버리기)
+select ceiling(3.789);
+select floor(3.789);
+select round(3.789, 2);
+select round(123.456, -1);
+select truncate(1234.5678 , 2), truncate(1234.5678 , -2);
+
+select lyrics from song;
+select length(lyrics) from song;
+select char_length(lyrics) from song;
+select concat (title, ' ', lyrics) as title from song;
+select instr(lyrics, 'tell') from song;
+select instr('abcd' , 'b');
+select instr('abcd' , 'f');
+select format(123456789, 1234, 2);
+select format(123456789, 1234, 2), 12345 as fsadfewrwer;
+trim
+좌우의 공백을 제거하는 함수
+select trim('           data');
+
+select left('장원영', 1);
+select right('장원영',1);
+select mid('장원영', 2, 1);
+
+851023-4455667
+생년월일 추출
+select left('851023-4455667', 6);
+성별 필드만 추출
+select mid('851023-4455667', 8 , 7);
+select lcase('aAbBcC'), ucase('abc');
+select substring('abcdef' ,3 ,2 );
+select substring_index('aa, bb, cc, dd', ',' , 2);
+select substring_index('aa, bb, cc, dd', ',' , -2);
+test999@gmail.com
+1. instr, left
+2. substring_index
+
+select instr('test999@gmail.com', '@')-1 as account;
+select left('test999@gmail.com', 7);
+
+select substring_index('test999@gmail.com', '@' ,1);
+
+create table test(addr varchar(200));
+insert into test values(
+'서울특별시 용산구 서빙고로 137 (용산동6가)'
+);
+
+select substring_index (substring_index('서울특별시 용산구 서빙고로 137 (용산동6가)', ' ' , -3 ), ' ', 1) as 도로명 from test;
+select substring_index('서울특별시 용산구 서빙고로 137 (용산동6가)' , '(' , -1) as 동주소
+select substring_index(substring_index('서울특별시 용산구 서빙고로 137 (용산동6가)' , '(' , -1), ')',1) as 동주소 from test;
+
+
+adddate, subdate, date_add, date_sub
+select adddate('2025-07-21',interval 31 day)
+month, day ,hour, minute,  
+select adddate('2025-07-21',interval 31 month)
+select adddate('2025-07-21',interval 31 year)
+select curdate();
+select curtime();
+select sysdate();
+
+select year(insert_date) from test;
+select * from girl_group;
+select name, year(debut) from girl_group;
+
+select year(debut) as 데뷔년도, count(name) as 팀수
+from girl_group
+group by 데뷔년도
+order by 데뷔년도 asc;
+
+select last_day(now());
+
+timestamdiff : 두 날자간의 차를 계산
+예) 오늘 : 2025 - 07 -21
+첫사랑을 만난 날 : 2023 - 06 -01
+select timeStampDiff(year, '2023-06-01', now()) as YEAR;
+select timeStampDiff(month, '2023-06-01', now()) as month;
+select timeStampDiff(day, '2023-06-01', now()) as day;
+
+최근 1개월 전
+오늘 2025-07-21 -> 2025-06-21
+select curdate() + interval -1 month;
+
+최근 1개월 범위 구하기
+select curdate() as 오늘, curdate() + interval -1 month as 한달전;
+
+지난달의 첫 날과 마지막날 구해보기
+curdate(). last_day(), interval, 
+select last_day(curdate() + interval -1 month) as 한달전;
+select last_day(curdate() + interval -2 month) as '지난 달 마지막 날';
+select last_day(curdate() + interval -2 month)+ interval +1 day as '지난 달 첫 날';
+
+girl_group 테이블에서 지금으로부터 15년 전 이후에 데뷔한 그룹의 이름과 데뷔일을 출력하시오
+select name, debut
+from girl_group as 걸그룹
+where year(debut) >= year(curdate() + interval -15 year)
+;
+
+select year(debut) as 데뷔년도, count(name) as 팀수
+from girl_group
+group by 데뷔년도
+order by 데뷔년도 asc;

@@ -1,0 +1,201 @@
+DBName : tel_book_db
+DBUser : root
+DBPassword : 1111
+
+create table telbook(
+id int primary key auto_increment,
+name varchar(20) not null,
+age int,
+address varchar(200),
+phone varchar(20) not null
+);
+
+insert into telbook (name, age, address, phone)
+values('장원영', 20, '서울', '010-1111-2222');
+
+insert into telbook (name, age, address, phone)
+values('안유진', 21, '대구', '010-7777-8888');
+
+insert into telbook (name, age, address, phone)
+values('장원영', 20, '서울', '010-1111-2222');
+
+
+mysql 로그인
+DB 선택
+----- DB에 잘 접속된 상태
+
+
+CREATE TABLE girl_group
+(
+  g_id INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(32) NOT NULL,
+  debut DATE NOT NULL,
+  hit_song_id INT
+);
+
+CREATE TABLE song
+(
+  s_id INT PRIMARY KEY AUTO_INCREMENT,
+  title VARCHAR(32) NOT NULL,
+  lyrics VARCHAR(32)
+);
+
+
+INSERT INTO song (s_id, title, lyrics) VALUES (101, 'Tell Me', 'tell me tell me tetetete tel me');
+INSERT INTO song (title, lyrics) VALUES ('Gee', 'GEE GEE GEE GEE GEE BABY BABY');
+INSERT INTO song (title, lyrics) VALUES ('미스터', '이름이 뭐야 미스터');
+INSERT INTO song (title, lyrics) VALUES ('Abracadabra', '이러다 미쳐 내가 여리여리');
+INSERT INTO song (title, lyrics) VALUES ('8282', 'Give me a call Baby baby');
+INSERT INTO song (title, lyrics) VALUES ('기대해', '기대해');
+INSERT INTO song (title, lyrics) VALUES ('I Don\'t car', '다른 여자들의 다리를');
+INSERT INTO song (title, lyrics) VALUES ('Bad Girl Good Girl', '앞에선 한 마디 말도');
+INSERT INTO song (title, lyrics) VALUES ('피노키오', '뉴예삐오');
+INSERT INTO song (title, lyrics) VALUES ('별빛달빛', '너는 내 별빛 내 마음의 별빛');
+INSERT INTO song (title, lyrics) VALUES ('A', 'A 워오우 워오우워 우우우');
+INSERT INTO song (title, lyrics) VALUES ('나혼자', '나 혼자 밥을 먹고 나 혼자 영화 보고');
+INSERT INTO song (title, lyrics) VALUES ('LUV', '설레이나요 ');
+INSERT INTO song (title, lyrics) VALUES ('짧은치마', '짧은 치마를 입고 내가 길을 걸으면');
+INSERT INTO song (title, lyrics) VALUES ('위아래', '위 아래 위위 아래');
+INSERT INTO song (title, lyrics) VALUES ('Dumb Dumb' , '너 땜에 하루종일');
+INSERT INTO girl_group (name, debut, hit_song_id) 
+VALUES ('원더걸스', '2007-09-12', 101);
+INSERT INTO girl_group (name, debut, hit_song_id) 
+VALUES ('소녀시대', '2009-06-03', 102);
+INSERT INTO girl_group (name, debut, hit_song_id) 
+VALUES ('카라', '2009-07-30', 103);
+INSERT INTO girl_group (name, debut, hit_song_id) 
+VALUES ('브라운아이드걸스', '2008-01-17', 104);
+INSERT INTO girl_group (name, debut, hit_song_id) 
+VALUES ('다비치', '2009-02-27', 105);
+INSERT INTO girl_group (name, debut, hit_song_id) 
+VALUES ('2NE1', '2009-07-08', 107);
+INSERT INTO girl_group (name, debut, hit_song_id) 
+VALUES ('f(x)', '2011-04-20', 109);
+INSERT INTO girl_group (name, debut, hit_song_id) 
+VALUES ('시크릿', '2011-01-06', 110);
+INSERT INTO girl_group (name, debut, hit_song_id) 
+VALUES ('레인보우', '2010-08-12', 111);
+INSERT INTO girl_group (name, debut) 
+VALUES ('에프터 스쿨', '2009-11-25');
+INSERT INTO girl_group (name, debut) 
+VALUES ('포미닛', '2009-08-28');
+
+select g.name, g.debut, s.title from girl_group as g
+inner join song as s
+where g.hit_song_id = s.s_id
+and g.name = '원더걸스';
+
+select g.name, g.debut, s.title from girl_group as g
+inner join song as s
+on g.hit_song_id = s.s_id
+where g.name = '원더걸스';
+
+select g.name, g.debut, s.title from song as s
+inner join girl_group as g
+on g.hit_song_id = s.s_id
+where g.name = '원더걸스';
+
+select g.g_id, g.name, g.hit_song_id, s.s_id, s.title
+from girl_group as g
+left join song as s
+on g.hit_song_id = s.s_id;
+
+select g.g_id, g.name, g.hit_song_id, s.s_id, s.title
+from girl_group as g
+inner join song as s
+on g.hit_song_id = s.s_id;
+
+select g.g_id, g.name, g.hit_song_id, s.s_id, s.title
+from girl_group as g
+right join song as s
+on g.hit_song_id = s.s_id;
+
+
+
+1.시크릿과 카라의 히트곡 제목과 가사를 출력하세요.
+select g.name, s.title, s.lyrics
+from girl_group as g
+inner join song as s
+on g.hit_song_id = s.s_id
+where g.name = '시크릿' or g.name = '카라';
+
+2. 데뷔 해가 2008년인 그룹의 id, 그룹이름, 데뷔일, 히트곡 제목을 출력하세요.(단, 그룹이름에 대해 오름차순 출력)
+select g.g_id, g.name, s.title, g.debut
+from girl_group as g
+inner join song as s
+on g.hit_song_id = s.s_id
+where g.debut > '2008-12-31' and g.debut < '2010-01-01'
+order by g.name asc;
+
+(where g.debut between '2009-1-1' and '2009-12-31')
+
+3.노랫가사에 me를 포함하는 데이터의 
+g_id, name, title, lyrics를 출력하세요
+select g.g_id, s.title, s.lyrics
+from girl_group as g
+inner join song as s
+on g.hit_song_id = s.s_id
+where s.lyrics like '%me%';
+
+
+4. 히트곡이 없는 그룹의 g_id, name, debut를 출력하세요.
+select g_id, name,debut from girl_group
+where hit_song_id is null;
+
+5. 각 해별로 데뷔한 그룹의 수를 출력하세요.
+
+select g.g_id, g.name as 걸그룹, e.name as 소속사 from girl_group as g
+inner join entertainment e
+on g.enter_id = e.e_id;
+
+문제 2. 회사이름, 그룹이름, 데뷔일, 노래제목 출력... (데뷔일에 대해서 내림차순)
+select g.debut, g.name as 걸그룹, e.name as 소속사, s.title as 노래제목 from girl_group as g
+inner join entertainment e
+on g.enter_id = e.e_id
+inner join song as s
+on s.s_id = g.hit_song_id
+order by debut desc;
+
+select e.name, g.name, g.debut, s.title
+from entertainment as e
+inner join girl_group as g
+on e.e_id = g.enter_id
+inner join song as s
+on g.hit_song_id = s.s_id
+order by g.debut desc;
+
+문제 3. 소속사별 소속그룹 수를 출력.... 소속그룹수별 내림차순
+select  g.enter_id from girl_groupas g, g.g_id group by g.enter_id;
+select count(e.name) from entertainment as e;
+
+select e.name, count(g.name) from entertainment as e
+inner join girl_group as g
+on e.e_id = g.enter_id
+group by e.name
+order by count(g.name);
+
+
+
+
+
+
+create table employee(
+id int primary key auto_increment,
+name varchar(100),
+superior_id int;
+
+insert into employee (name) values('김사장');
+insert into employee (name) values('정과장');
+insert into employee (name) values('최대리');
+insert into employee (name) values('이대리');
+insert into employee (name) values('박고문');
+
+update employee set superior_id= where
+update employee 
+update employee 
+
+
+
+
+alter table employee
+    add column enter_id int after hit_song_id;
